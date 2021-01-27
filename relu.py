@@ -1,5 +1,5 @@
 import torch
-import torch.nn as nn
+from torch import nn
 class Relu_layer(nn.Module):
     def __init__(self, in_features, out_features, bias=True, inplace=False, is_first=False):
         super().__init__()
@@ -16,7 +16,7 @@ class Relu_layer(nn.Module):
         nn.init.kaiming_normal_(self.linear.weight, a=0.0, nonlinearity='relu', mode='fan_in')
 
     def forward(self, x):
-        y = nn.functional.relu(x, inplace=self.inplace)
+        y = nn.ReLU(x, inplace=True)
         return y
 
 class Relu(nn.Module):
