@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset, DataLoader
-#from PIL import Image
+from PIL import Image
 import skimage
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 import torch
