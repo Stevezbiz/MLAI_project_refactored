@@ -8,6 +8,37 @@ from torchvision.transforms import Resize, Compose, ToTensor, Normalize, Graysca
 import matplotlib.pyplot as plt
 from skimage import metrics
 
+def gradient(y, x, grad_outputs=None):
+    if grad_outputs is None:
+        grad_outputs = torch.ones_like(y)
+    # grad = torch.autograd.grad(y, [x], grad_outputs=grad_outputs, create_graph=True)[0]   # original code
+    grad = torch.autograd.grad(
+        y,                              # predicted image => a continuous function
+        [x],                            # ground truth => sample a continuous function
+        grad_outputs=grad_outputs,      #
+        retain_graph=True,              # keep the graph after its usage
+        create_graph=True               # graph for higher order derivative products
+    )[0]
+
+    return grad
+
+def divergence(y, x):
+    div = 0.
+    for i in range(y.shape[-1]):
+        # div += torch.autograd.grad(y[..., i], x, torch.ones_like(y[..., i]), create_graph=True, allow_unused=True)[0][..., i:i+1] # original code
+        div += torch.autograd.grad(
+            y[..., i],                  # predicted image
+            x,                          # ground truth
+            torch.ones_like(y[..., i]), # 
+            retain_graph=True,          # keep the graph after its usage
+            create_graph=True           # graph for higher order derivative products
+        )[0][..., i:i+1]
+    return div
+
+def laplace(y, x):
+    grad = gradient(y, x)
+    return divergence(grad, x)
+
 def _psnr(pred, gt, max_pixel=1.):
     '''peak signal to noise ratio formula'''
     mse = metrics.mean_squared_error(pred, gt)
@@ -272,3 +303,20 @@ def plot_laplace(img_laplace, gt_laplace=None, sidelength=256, img_caption=None)
     # if gt_laplace is not None:
     #     axes[1].imshow(gt_laplace.cpu().view(sidelength, sidelength).detach().numpy())
     plt.show()
+
+def image_mse(model_output, coords, gt_image):
+    image_loss = ((model_output - gt_image)**2).mean()
+    return image_loss
+
+def gradients_mse(model_output, coords, gt_gradients):
+    # compute gradients on the model
+    gradients = gradient(model_output, coords)
+    # compare them with the ground-truth
+    gradients_loss = torch.mean((gradients - gt_gradients).pow(2).sum(-1))
+    return gradients_loss
+ 
+def laplace_mse(model_output, coords, gt_laplace):
+    laplacian = laplace(model_output, coords)
+    # compare them with the ground truth
+    laplace_loss = torch.mean((laplacian - gt_laplace)**2)
+    return laplace_loss
