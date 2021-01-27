@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from PIL import Image
 import skimage
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
