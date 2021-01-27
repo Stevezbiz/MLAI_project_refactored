@@ -16,7 +16,7 @@ class Relu_layer(nn.Module):
         nn.init.kaiming_normal_(self.linear.weight, a=0.0, nonlinearity='relu', mode='fan_in')
 
     def forward(self, x):
-        y = nn.ReLU(x, inplace=True)
+        y = nn.ReLU(x)
         return y
 
 class Relu(nn.Module):
