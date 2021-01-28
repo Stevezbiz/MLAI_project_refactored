@@ -12,10 +12,6 @@ class Sine_layer(nn.Module):
 
         self.linear = nn.Linear(in_features, out_features, bias=bias)
         
-        self.init_weights()
-    
-    def init_weights(self):
-        '''Init weigths as defined in the paper'''
         with torch.no_grad():
             if self.is_first:
                 self.linear.weight.uniform_(-1 / self.in_features, 1 / self.in_features)
