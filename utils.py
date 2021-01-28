@@ -320,3 +320,8 @@ def laplace_mse(model_output, coords, gt_laplace):
     # compare them with the ground truth
     laplace_loss = torch.mean((laplacian - gt_laplace)**2)
     return laplace_loss
+
+def psnr(pred, gt):
+    pred = torch.from_numpy(_init_img_psnr(pred, silent=silent))
+    gt = torch.from_numpy(_init_img_psnr(gt, silent=silent))
+    return = _psnr(pred, gt)
