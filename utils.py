@@ -327,3 +327,24 @@ def psnr(pred, gt, sidelength=256, silent=True):
     gt = torch.from_numpy(_init_img_psnr(gt, silent=silent))
     gt = gt.cpu().view(sidelength, sidelength).detach().numpy()
     return _psnr(pred, gt)
+
+def plt_psnrs(psnrs, total_steps, title, color='w'):
+    '''psnrs: dict
+    total_steps: int
+    title: str
+    color: matplotlib color type'''
+    x = [i for i in range(total_steps+1)]
+    plt.figure(figsize=(12, 6))
+    plt.title(title, color=color, fontsize=16)
+    plt.xlabel('iterations', color=color, fontsize=14)
+    plt.ylabel('PSNR', color=color, fontsize=14)
+    plt.xticks(color=color)
+    plt.yticks(color=color)
+    plt.xlim(0, total_steps)
+    plt.grid('--')
+    for s, y in psnrs.items():
+        if s == '30':
+            plt.plot(x, y, label=s, linewidth=2.5)
+        else:
+            plt.plot(x, y, label=s)
+    plt.legend(loc='upper left')
