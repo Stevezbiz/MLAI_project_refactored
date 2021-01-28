@@ -321,7 +321,7 @@ def laplace_mse(model_output, coords, gt_laplace):
     laplace_loss = torch.mean((laplacian - gt_laplace)**2)
     return laplace_loss
 
-def psnr(pred, gt, silent=True):
+def psnr(pred, gt, sidelength=256, silent=True):
     pred = torch.from_numpy(_init_img_psnr(pred, silent=silent))
     pred = pred.cpu().view(sidelength, sidelength).detach().numpy()
     gt = torch.from_numpy(_init_img_psnr(gt, silent=silent))
