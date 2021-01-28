@@ -108,15 +108,15 @@ def caption(pred, gt=None, type=None, sidelength=256, silent=True):
         label = None
     return label
 
-def plot_all(img, gt, sidelength=256, img_caption=None):
+def plot_all(img, gt, sidelength=256, img_caption=None, silent=True):
     '''Plot image, gradients and laplacian all at the same time (only for the generated image)'''
     n_images = 3
     _, axes = plt.subplots(1, n_images, figsize=(18,6))
     if img_caption is None:
         img_caption = {
-            'img' : caption(img['img'], gt['img'], 'img', sidelength=sidelength),
-            'grads' : caption(img['grads'], gt['grads'], 'grads', sidelength=sidelength),
-            'laplace' : caption(img['laplace'], gt['laplace'], 'laplace', sidelength=sidelength)
+            'img' : caption(img['img'], gt['img'], 'img', sidelength=sidelength, silent=silent),
+            'grads' : caption(img['grads'], gt['grads'], 'grads', sidelength=sidelength, silent=silent),
+            'laplace' : caption(img['laplace'], gt['laplace'], 'laplace', sidelength=sidelength, silent=silent)
         }
     
     axes[0].imshow(img['img'].cpu().view(sidelength, sidelength).detach().numpy())
@@ -321,7 +321,7 @@ def laplace_mse(model_output, coords, gt_laplace):
     laplace_loss = torch.mean((laplacian - gt_laplace)**2)
     return laplace_loss
 
-def psnr(pred, gt):
+def psnr(pred, gt, silent=True):
     pred = torch.from_numpy(_init_img_psnr(pred, silent=silent))
     gt = torch.from_numpy(_init_img_psnr(gt, silent=silent))
     return = _psnr(pred, gt)
