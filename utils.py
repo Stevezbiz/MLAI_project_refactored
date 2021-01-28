@@ -323,5 +323,7 @@ def laplace_mse(model_output, coords, gt_laplace):
 
 def psnr(pred, gt, silent=True):
     pred = torch.from_numpy(_init_img_psnr(pred, silent=silent))
+    pred = pred.cpu().view(sidelength, sidelength).detach().numpy()
     gt = torch.from_numpy(_init_img_psnr(gt, silent=silent))
+    gt = gt.cpu().view(sidelength, sidelength).detach().numpy()
     return _psnr(pred, gt)
