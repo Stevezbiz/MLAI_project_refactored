@@ -328,7 +328,7 @@ def psnr(pred, gt, sidelength=256, silent=True):
     gt = gt.cpu().view(sidelength, sidelength).detach().numpy()
     return _psnr(pred, gt)
 
-def plt_psnrs(psnrs, total_steps, title, color='w'):
+def plot_psnrs(psnrs, total_steps, title, color='w'):
     '''psnrs: dict
     total_steps: int
     title: str
